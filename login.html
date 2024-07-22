@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Connexion</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="fiches.html">Fiches de Révision</a></li>
+                <li><a href="forum.html">Forum</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="resources.html">Ressources</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Connexion</h2>
+            <form action="dashboard.html" method="post">
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p>Pas encore de compte ? <a href="signup.html">Inscrivez-vous ici</a>.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Fiches de Révision. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
