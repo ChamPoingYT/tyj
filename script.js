@@ -1,41 +1,43 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log("Page Loaded");
 
+    // Fonction pour lire les données du localStorage
+    const readData = () => {
+        const data = localStorage.getItem('data');
+        return data ? JSON.parse(data) : { articles: [], topics: [] };
+    };
+
+    // Fonction pour écrire les données dans le localStorage
+    const writeData = (data) => {
+        localStorage.setItem('data', JSON.stringify(data));
+    };
+
     // Fetch articles and display them
-    const loadArticles = async () => {
-        try {
-            const response = await fetch('/api/articles');
-            const articles = await response.json();
-            const articlesContainer = document.getElementById('articles');
-            if (articlesContainer) {
-                articlesContainer.innerHTML = articles.map(article => `
-                    <article>
-                        <h3>${article.title}</h3>
-                        <p>${article.content}</p>
-                        <a href="article.html?id=${article.id}" class="read-more" data-article-id="${article.id}">Lire plus</a>
-                    </article>
-                `).join('');
-            }
-        } catch (error) {
-            console.error("Error loading articles:", error);
+    const loadArticles = () => {
+        const data = readData();
+        const articlesContainer = document.getElementById('articles');
+        if (articlesContainer) {
+            articlesContainer.innerHTML = data.articles.map(article => `
+                <article>
+                    <h3>${article.title}</h3>
+                    <p>${article.content}</p>
+                    <a href="article.html?id=${article.id}" class="read-more" data-article-id="${article.id}">Lire plus</a>
+                </article>
+            `).join('');
         }
     };
 
-    const loadArticle = async (id) => {
-        try {
-            const response = await fetch(`/api/articles/${id}`);
-            const article = await response.json();
-            const articleContent = document.getElementById('articleContent');
-            if (articleContent) {
+    const loadArticle = (id) => {
+        const data = readData();
+        const article = data.articles.find(a => a.id === id);
+        const articleContent = document.getElementById('articleContent');
+        if (articleContent) {
+            if (article) {
                 articleContent.innerHTML = `
                     <h2>${article.title}</h2>
                     <p>${article.content}</p>
                 `;
-            }
-        } catch (error) {
-            console.error("Error loading article:", error);
-            const articleContent = document.getElementById('articleContent');
-            if (articleContent) {
+            } else {
                 articleContent.innerHTML = `<h2>Erreur lors du chargement de l'article</h2>`;
             }
         }
@@ -167,6 +169,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const topicTitle = document.getElementById('topicTitle').value;
             const topicContent = document.getElementById('topicContent').value;
 
+            const data = readData();
+            const newTopic = {
+                id: Date.now().toString(),
+                title: topicTitle,
+                content: topicContent
+            };
+            data.topics.push(newTopic);
+            writeData(data);
+
             console.log("Nouvelle discussion :", { topicTitle, topicContent });
             alert("Discussion créée avec succès.");
             forumForm.reset();
@@ -197,35 +208,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // Gestion de l'ajout d'un article
     const addArticleForm = document.getElementById('addArticleForm');
     if (addArticleForm) {
-        addArticleForm.addEventListener('submit', async function (event) {
+        addArticleForm.addEventListener('submit', function (event) {
             event.preventDefault();
             const title = document.getElementById('articleTitle').value;
             const content = document.getElementById('articleContent').value;
 
+            const data = readData();
             const newArticle = {
                 id: Date.now().toString(), // Generate a simple unique ID
                 title: title,
                 content: content
             };
+            data.articles.push(newArticle);
+            writeData(data);
 
-            try {
-                const response = await fetch('/api/articles', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newArticle)
-                });
-                if (response.ok) {
-                    alert("Article ajouté avec succès.");
-                    addArticleForm.reset();
-                } else {
-                    alert("Erreur lors de l'ajout de l'article.");
-                }
-            } catch (error) {
-                console.error("Error adding article:", error);
-                alert("Erreur lors de l'ajout de l'article.");
-            }
+            console.log("Nouvel article ajouté :", { title, content });
+            alert("Article ajouté avec succès.");
+            addArticleForm.reset();
         });
     }
 });
