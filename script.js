@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fonction pour lire les données du localStorage
     const readData = () => {
         const data = localStorage.getItem('data');
-        return data ? JSON.parse(data) : { articles: [], topics: [] };
+        return data ? JSON.parse(data) : { articles: [], forums: [] };
     };
 
     // Fonction pour écrire les données dans le localStorage
@@ -12,45 +12,46 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('data', JSON.stringify(data));
     };
 
-    // Fetch articles and display them
-    const loadArticles = () => {
+    // Fonction pour afficher les forums
+    const loadForums = () => {
         const data = readData();
-        const articlesContainer = document.getElementById('articles');
-        if (articlesContainer) {
-            articlesContainer.innerHTML = data.articles.map(article => `
+        const forumsContainer = document.getElementById('forums');
+        if (forumsContainer) {
+            forumsContainer.innerHTML = data.forums.map(forum => `
                 <article>
-                    <h3>${article.title}</h3>
-                    <p>${article.content}</p>
-                    <a href="article.html?id=${article.id}" class="read-more" data-article-id="${article.id}">Lire plus</a>
+                    <h3>${forum.title}</h3>
+                    <p>${forum.description}</p>
+                    <a href="forum.html?id=${forum.id}" class="view-forum" data-forum-id="${forum.id}">Voir le forum</a>
                 </article>
             `).join('');
         }
     };
 
-    const loadArticle = (id) => {
+    const loadForum = (id) => {
         const data = readData();
-        const article = data.articles.find(a => a.id === id);
-        const articleContent = document.getElementById('articleContent');
-        if (articleContent) {
-            if (article) {
-                articleContent.innerHTML = `
-                    <h2>${article.title}</h2>
-                    <p>${article.content}</p>
+        const forum = data.forums.find(f => f.id === id);
+        const forumContent = document.getElementById('forumContent');
+        if (forumContent) {
+            if (forum) {
+                forumContent.innerHTML = `
+                    <h2>${forum.title}</h2>
+                    <p>${forum.description}</p>
+                    <!-- Ajouter ici le contenu du forum -->
                 `;
             } else {
-                articleContent.innerHTML = `<h2>Erreur lors du chargement de l'article</h2>`;
+                forumContent.innerHTML = `<h2>Erreur lors du chargement du forum</h2>`;
             }
         }
     };
 
-    if (document.getElementById('articles')) {
-        loadArticles();
+    if (document.getElementById('forums')) {
+        loadForums();
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const articleId = urlParams.get('id');
-    if (articleId) {
-        loadArticle(articleId);
+    const forumId = urlParams.get('id');
+    if (forumId) {
+        loadForum(forumId);
     }
 
     // Gestion de la soumission du formulaire de connexion
@@ -161,26 +162,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Forum - Soumettre une nouvelle discussion
-    const forumForm = document.querySelector('form[action="new_topic.html"]');
-    if (forumForm) {
-        forumForm.addEventListener('submit', function (event) {
+    // Forum - Soumettre un nouveau forum
+    const newForumForm = document.getElementById('newForumForm');
+    if (newForumForm) {
+        newForumForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const topicTitle = document.getElementById('topicTitle').value;
-            const topicContent = document.getElementById('topicContent').value;
+            const forumTitle = document.getElementById('forumTitle').value;
+            const forumDescription = document.getElementById('forumDescription').value;
 
             const data = readData();
-            const newTopic = {
+            const newForum = {
                 id: Date.now().toString(),
-                title: topicTitle,
-                content: topicContent
+                title: forumTitle,
+                description: forumDescription
             };
-            data.topics.push(newTopic);
+            data.forums.push(newForum);
             writeData(data);
 
-            console.log("Nouvelle discussion :", { topicTitle, topicContent });
-            alert("Discussion créée avec succès.");
-            forumForm.reset();
+            console.log("Nouveau forum créé :", { forumTitle, forumDescription });
+            alert("Forum créé avec succès.");
+            newForumForm.reset();
+            loadForums();
         });
     }
 
