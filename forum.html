@@ -12,28 +12,41 @@
         <nav>
             <ul>
                 <li><a href="index.html">Accueil</a></li>
-                <li><a href="fiches.html">Fiches de Révision</a></li>
-                <li><a href="forum.html">Forum</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="resources.html">Ressources</a></li>
+                <li><a href="about.html">À propos</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li><a href="login.html">Connexion</a></li>
+                <li><a href="forum.html" class="active">Forum</a></li>
             </ul>
         </nav>
     </header>
+
     <main>
-        <section>
-            <h2>Forum de Discussion</h2>
-            <p>Posez vos questions et interagissez avec d'autres élèves.</p>
-            <ul>
-                <li><a href="topic1.html">Sujet 1 : Aide en Mathématiques</a></li>
-                <li><a href="topic2.html">Sujet 2 : Révisions Histoire</a></li>
-                <li><a href="topic3.html">Sujet 3 : Méthodes de Travail</a></li>
-            </ul>
+        <section id="forumContent">
+            <!-- Le contenu du forum spécifique sera chargé ici -->
+        </section>
+
+        <section id="createForum">
+            <h2>Créer un nouveau forum</h2>
+            <form id="newForumForm" action="#">
+                <label for="forumTitle">Titre du forum:</label>
+                <input type="text" id="forumTitle" name="forumTitle" required>
+                
+                <label for="forumDescription">Description:</label>
+                <textarea id="forumDescription" name="forumDescription" required></textarea>
+                
+                <button type="submit">Créer un forum</button>
+            </form>
+        </section>
+
+        <section id="forums">
+            <h2>Forums existants</h2>
+            <!-- Les forums existants seront affichés ici -->
         </section>
     </main>
+
     <footer>
         <p>&copy; 2024 Fiches de Révision. Tous droits réservés.</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
